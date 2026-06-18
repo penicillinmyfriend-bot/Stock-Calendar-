@@ -189,6 +189,44 @@ h3 {
   height: 16px;
 }
 
+/* Dropdown menu (Export) ------------------------------------------------- */
+
+.menu-wrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 200px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 6px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu button {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 9px 11px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.menu button:hover {
+  background: var(--green-tint-soft);
+  color: var(--green-700);
+}
+
 /* ----------------------------------------------------------------- Toolbar */
 
 .toolbar {
@@ -294,6 +332,22 @@ h3 {
 .chip.is-active {
   background: var(--green-tint-soft);
   border-color: var(--green-500);
+  color: var(--green-700);
+}
+
+.chip__count {
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--gray-100);
+  color: var(--gray);
+  border-radius: 999px;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.chip.is-active .chip__count {
+  background: var(--green-tint);
   color: var(--green-700);
 }
 
@@ -605,6 +659,31 @@ h3 {
   margin-top: 2px;
 }
 
+.event-card__rel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green-700);
+  background: var(--green-tint-soft);
+  border: 1px solid var(--green-tint);
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.event-card__rel--soon {
+  color: var(--amber);
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.event-card__rel--past {
+  color: var(--gray);
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+}
+
 .event-card__notes {
   font-size: 13px;
   color: var(--ink-soft);
@@ -890,6 +969,36 @@ h3 {
 
 .is-hidden {
   display: none !important;
+}
+
+/* Drag-and-drop overlay -------------------------------------------------- */
+
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(22, 163, 74, 0.12);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.drop-overlay__card {
+  background: var(--surface);
+  border: 2px dashed var(--green-500);
+  border-radius: var(--radius-lg);
+  padding: 40px 56px;
+  text-align: center;
+  color: var(--green-700);
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 /* ------------------------------------------------------------- Disclaimer */

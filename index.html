@@ -60,22 +60,31 @@
           <span>Sync file</span>
         </button>
 
-        <button
-          id="btn-export"
-          class="btn btn--ghost btn--label-collapsible"
-          title="Export / save calendar-events.json"
-        >
-          <svg viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <span>Export</span>
-        </button>
+        <div class="menu-wrap">
+          <button
+            id="btn-export"
+            class="btn btn--ghost btn--label-collapsible"
+            title="Export: JSON or calendar (.ics)"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Export</span>
+          </button>
+          <div class="menu is-hidden" id="export-menu" role="menu">
+            <button role="menuitem" data-act="json">Download JSON</button>
+            <button role="menuitem" data-act="save" id="menu-save">Save JSON to file…</button>
+            <button role="menuitem" data-act="ics">Calendar file (.ics)</button>
+          </div>
+        </div>
 
         <button id="btn-update" class="btn">
           <svg viewBox="0 0 24 24" fill="none">
@@ -242,7 +251,7 @@
           </div>
           <div class="modal__footer">
             <button type="button" class="btn" id="modal-cancel">Cancel</button>
-            <button type="submit" class="btn btn--primary">Save event</button>
+            <button type="submit" class="btn btn--primary" id="modal-submit">Save event</button>
           </div>
         </form>
       </div>
@@ -256,6 +265,22 @@
     </footer>
 
     <div class="toast-container" id="toasts"></div>
+
+    <!-- Drag-and-drop import overlay -->
+    <div class="drop-overlay is-hidden" id="drop-overlay">
+      <div class="drop-overlay__card">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <div>Drop chat exports (<strong>.md</strong> / <strong>.txt</strong>) to import</div>
+      </div>
+    </div>
 
     <!-- Hidden file input used by "Update from chats" in the browser -->
     <input type="file" id="import-input" accept=".md,.txt,text/markdown,text/plain" multiple class="is-hidden" />

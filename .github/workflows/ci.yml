@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # No dependencies to install — the project is dependency-free.
+      - name: Run parser/merge tests
+        run: node --test
+      - name: Smoke-check the update routine (dry run)
+        run: node scripts/update_calendar.js --dry-run

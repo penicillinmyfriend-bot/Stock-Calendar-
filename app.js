@@ -59,6 +59,7 @@
       showBelowMin: false,
     },
     fileHandle: null, // File System Access API handle, if granted
+    editingEvent: null, // event being edited in the modal, or null when adding
   };
 
   // ----------------------------------------------------------------- Helpers
@@ -108,6 +109,24 @@
   function fmtLongDate(s) {
     var d = parseISO(s);
     return WEEKDAYS[d.getDay()] + ", " + MONTH_NAMES[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+  }
+
+  // Human-friendly relative date: "Today", "Tomorrow", "in 5 days", "in 2 months".
+  function relativeDate(iso) {
+    var diff = Math.round((parseISO(iso) - parseISO(todayISO())) / 86400000);
+    if (diff === 0) return "Today";
+    if (diff === 1) return "Tomorrow";
+    if (diff === -1) return "Yesterday";
+    var abs = Math.abs(diff);
+    var phrase = abs <= 45 ? abs + " days" : Math.round(abs / 30) + " months";
+    return diff > 0 ? "in " + phrase : phrase + " ago";
+  }
+  // CSS modifier for the relative-date pill (soon / future / past).
+  function relativeClass(iso) {
+    var diff = Math.round((parseISO(iso) - parseISO(todayISO())) / 86400000);
+    if (diff < 0) return "event-card__rel--past";
+    if (diff <= 3) return "event-card__rel--soon";
+    return "";
   }
 
   // --------------------------------------------------------------- Toasts
@@ -431,6 +450,12 @@
       body.appendChild(el("div", { class: "event-card__notes", text: e.notes }));
 
     card.appendChild(body);
+    card.appendChild(
+      el("div", {
+        class: ("event-card__rel " + relativeClass(e.date)).trim(),
+        text: relativeDate(e.date),
+      })
+    );
     card.addEventListener("click", function () {
       openDetail([e], e.title);
     });
@@ -482,7 +507,7 @@
     card.appendChild(row);
 
     card.appendChild(el("div", { class: "detail__label", text: "Date" }));
-    card.appendChild(el("div", { text: fmtLongDate(e.date) }));
+    card.appendChild(el("div", { text: fmtLongDate(e.date) + " · " + relativeDate(e.date) }));
 
     if (e.type === "ipo" && e.expectedPrice != null) {
       card.appendChild(el("div", { class: "detail__label", text: "Expected price" }));
@@ -517,6 +542,15 @@
     var actions = el("div", { class: "detail__actions" });
     actions.appendChild(
       el("button", {
+        class: "btn",
+        text: "Edit",
+        onclick: function () {
+          openModal(e);
+        },
+      })
+    );
+    actions.appendChild(
+      el("button", {
         class: "btn btn--danger",
         text: "Delete",
         onclick: function () {
@@ -543,12 +577,29 @@
     toast("Event deleted", "success");
   }
 
-  // ------------------------------------------------------------ Add event
-  function openModal() {
+  // ------------------------------------------------------ Add / edit event
+  function openModal(event) {
     $("#event-form").reset();
-    $("#f-source").value = "manual";
-    $("#f-date").value = todayISO();
+    state.editingEvent = event && event.id ? event : null;
+    $("#modal-title").textContent = state.editingEvent ? "Edit event" : "Add event";
+    $("#modal-submit").textContent = state.editingEvent ? "Save changes" : "Save event";
+
+    if (state.editingEvent) {
+      $("#f-date").value = event.date;
+      $("#f-type").value = event.type;
+      $("#f-ticker").value = event.ticker || "";
+      $("#f-title").value = event.title || "";
+      $("#f-notes").value = event.notes || "";
+      $("#f-signal").value = event.signal || "";
+      $("#f-price").value = event.expectedPrice != null ? event.expectedPrice : "";
+      $("#f-source").value = event.source || "manual";
+    } else {
+      $("#f-source").value = "manual";
+      $("#f-date").value = todayISO();
+    }
+
     syncPriceField();
+    closeDetail();
     $("#modal-backdrop").classList.add("is-open");
     setTimeout(function () {
       $("#f-date").focus();
@@ -556,6 +607,7 @@
   }
   function closeModal() {
     $("#modal-backdrop").classList.remove("is-open");
+    state.editingEvent = null;
   }
   function syncPriceField() {
     $("#field-price").classList.toggle("is-hidden", $("#f-type").value !== "ipo");
@@ -563,6 +615,7 @@
 
   function submitEvent(ev) {
     ev.preventDefault();
+    var editing = state.editingEvent;
     var type = $("#f-type").value;
     var ticker = $("#f-ticker").value.trim().toUpperCase() || null;
     var date = $("#f-date").value;
@@ -579,8 +632,10 @@
       type: type,
       title: title,
       notes: $("#f-notes").value.trim(),
+      // A hand-edited event becomes user-curated ("manual") so the update
+      // routine never overwrites it; its origin is preserved in sourceRef.
       source: "manual",
-      sourceRef: "manual",
+      sourceRef: editing ? editing.sourceRef || "manual" : "manual",
     };
     var signal = $("#f-signal").value;
     if (signal) event.signal = signal;
@@ -590,7 +645,14 @@
     }
     event.id = Parse.makeId(event);
 
-    // Upsert by id (replaces if the same ticker+type+date already exists).
+    // If editing and the key (ticker+type+date) changed, the id changes too —
+    // drop the old entry so the event moves rather than duplicates.
+    if (editing && editing.id !== event.id) {
+      state.events = state.events.filter(function (e) {
+        return e.id !== editing.id;
+      });
+    }
+
     var idx = state.events.findIndex(function (e) {
       return e.id === event.id;
     });
@@ -601,7 +663,7 @@
     closeModal();
     refreshTickerFilter();
     render();
-    toast(idx >= 0 ? "Event updated" : "Event added", "success");
+    toast(editing ? "Event updated" : "Event added", "success");
   }
 
   function autoTitle(type, ticker) {
@@ -689,43 +751,112 @@
     );
   }
 
-  function exportStore() {
-    var data = serializeStore();
-    // Prefer the File System Access API so users can save straight into the repo.
-    if (window.showSaveFilePicker) {
-      window
-        .showSaveFilePicker({
-          suggestedName: "calendar-events.json",
-          types: [{ description: "JSON", accept: { "application/json": [".json"] } }],
-        })
-        .then(function (handle) {
-          return handle.createWritable().then(function (w) {
-            return w.write(data).then(function () {
-              return w.close();
-            });
-          });
-        })
-        .then(function () {
-          toast("Saved calendar-events.json", "success");
-        })
-        .catch(function (err) {
-          if (err && err.name === "AbortError") return;
-          downloadStore(data);
-        });
-    } else {
-      downloadStore(data);
-    }
-  }
-
-  function downloadStore(data) {
-    var blob = new Blob([data], { type: "application/json" });
+  function downloadBlob(data, filename, mime) {
+    var blob = new Blob([data], { type: mime });
     var url = URL.createObjectURL(blob);
-    var a = el("a", { href: url, download: "calendar-events.json" });
+    var a = el("a", { href: url, download: filename });
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
+  }
+
+  function downloadJSON() {
+    downloadBlob(serializeStore(), "calendar-events.json", "application/json");
     toast("Downloaded calendar-events.json — move it into data/ to commit", "success");
+  }
+
+  // Save straight into the repo via the File System Access API where available.
+  function saveJSONToFile() {
+    if (!window.showSaveFilePicker) {
+      downloadJSON();
+      return;
+    }
+    var data = serializeStore();
+    window
+      .showSaveFilePicker({
+        suggestedName: "calendar-events.json",
+        types: [{ description: "JSON", accept: { "application/json": [".json"] } }],
+      })
+      .then(function (handle) {
+        return handle.createWritable().then(function (w) {
+          return w.write(data).then(function () {
+            return w.close();
+          });
+        });
+      })
+      .then(function () {
+        toast("Saved calendar-events.json", "success");
+      })
+      .catch(function (err) {
+        if (err && err.name === "AbortError") return;
+        downloadJSON();
+      });
+  }
+
+  // Build an iCalendar (.ics) feed of the visible events as all-day entries so
+  // the calendar can be imported into Google / Apple / Outlook.
+  function buildICS(events) {
+    function esc(s) {
+      return String(s == null ? "" : s)
+        .replace(/\\/g, "\\\\")
+        .replace(/;/g, "\\;")
+        .replace(/,/g, "\\,")
+        .replace(/\r?\n/g, "\\n");
+    }
+    function dateOnly(iso) {
+      return iso.replace(/-/g, "");
+    }
+    var now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    var out = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Stock Calendar//EN",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH",
+      "X-WR-CALNAME:Stock Calendar",
+    ];
+    Parse.sortEvents(events).forEach(function (e) {
+      // All-day events use an exclusive DTEND (start + 1 day).
+      var endExclusive = new Date(parseISO(e.endDate || e.date).getTime() + 86400000);
+      var desc = ["Type: " + e.type];
+      if (e.type === "ipo" && e.expectedPrice != null) desc.push("Expected price: $" + e.expectedPrice);
+      if (e.signal) desc.push("Signal (a labeled indicator, not a prediction): " + e.signal);
+      if (e.notes) desc.push(e.notes);
+      desc.push("Source: " + (e.source || "") + (e.sourceRef ? " (" + e.sourceRef + ")" : ""));
+      desc.push("For informational purposes only — not financial advice.");
+      out.push(
+        "BEGIN:VEVENT",
+        "UID:" + e.id + "@stock-calendar",
+        "DTSTAMP:" + now,
+        "DTSTART;VALUE=DATE:" + dateOnly(e.date),
+        "DTEND;VALUE=DATE:" + dateOnly(isoDate(endExclusive)),
+        "SUMMARY:" + esc((e.ticker ? e.ticker + " — " : "") + e.title),
+        "DESCRIPTION:" + esc(desc.join("\n")),
+        "CATEGORIES:" + esc((e.type || "event").toUpperCase()),
+        "END:VEVENT"
+      );
+    });
+    out.push("END:VCALENDAR");
+    return out.join("\r\n") + "\r\n";
+  }
+
+  function exportICS() {
+    var events = visibleEvents();
+    if (!events.length) {
+      toast("No events to export with the current filters", "error");
+      return;
+    }
+    downloadBlob(buildICS(events), "stock-calendar.ics", "text/calendar");
+    toast("Exported " + events.length + " events to stock-calendar.ics", "success");
+  }
+
+  // Export dropdown menu --------------------------------------------------
+  function toggleExportMenu(force) {
+    var menu = $("#export-menu");
+    var open = force != null ? force : menu.classList.contains("is-hidden");
+    menu.classList.toggle("is-hidden", !open);
+    $("#btn-export").setAttribute("aria-expanded", open ? "true" : "false");
   }
 
   // ------------------------------------------------------------ Ticker filter
@@ -749,8 +880,30 @@
     state.filters.ticker = sel.value;
   }
 
+  // Show how many events of each type exist in the current ticker / price
+  // scope (ignoring the type toggles themselves) next to each filter chip.
+  function renderChipCounts() {
+    var min = state.config.MIN_IPO_PRICE;
+    var f = state.filters;
+    var counts = {};
+    state.events.forEach(function (e) {
+      if (f.ticker && e.ticker !== f.ticker) return;
+      if (!f.showBelowMin && e.type === "ipo" && e.expectedPrice != null && e.expectedPrice < min) return;
+      counts[e.type] = (counts[e.type] || 0) + 1;
+    });
+    document.querySelectorAll("#type-chips .chip").forEach(function (chip) {
+      var span = chip.querySelector(".chip__count");
+      if (!span) {
+        span = el("span", { class: "chip__count" });
+        chip.appendChild(span);
+      }
+      span.textContent = counts[chip.dataset.type] || 0;
+    });
+  }
+
   // ------------------------------------------------------------------ Render
   function render() {
+    renderChipCounts();
     if (state.view === "month") {
       $("#month-view").classList.remove("is-hidden");
       $("#upcoming-view").classList.add("is-hidden");
@@ -821,9 +974,28 @@
     });
 
     // Header actions
-    $("#btn-add").addEventListener("click", openModal);
+    $("#btn-add").addEventListener("click", function () {
+      openModal();
+    });
     $("#btn-update").addEventListener("click", triggerImport);
-    $("#btn-export").addEventListener("click", exportStore);
+
+    // Export dropdown menu
+    $("#btn-export").addEventListener("click", function (e) {
+      e.stopPropagation();
+      toggleExportMenu();
+    });
+    $("#export-menu").addEventListener("click", function (e) {
+      var act = e.target && e.target.getAttribute("data-act");
+      if (!act) return;
+      if (act === "json") downloadJSON();
+      else if (act === "save") saveJSONToFile();
+      else if (act === "ics") exportICS();
+      toggleExportMenu(false);
+    });
+    document.addEventListener("click", function () {
+      toggleExportMenu(false);
+    });
+
     $("#btn-sync").addEventListener("click", function () {
       loadEvents().then(function () {
         refreshTickerFilter();
@@ -835,6 +1007,41 @@
     $("#import-input").addEventListener("change", function (e) {
       handleImportFiles(e.target.files);
       e.target.value = ""; // allow re-importing the same file
+    });
+
+    // Drag-and-drop import (drop .md/.txt anywhere on the window)
+    var dropOverlay = $("#drop-overlay");
+    var dragDepth = 0;
+    function hasFiles(e) {
+      return (
+        e.dataTransfer &&
+        Array.prototype.indexOf.call(e.dataTransfer.types || [], "Files") !== -1
+      );
+    }
+    window.addEventListener("dragenter", function (e) {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth++;
+      dropOverlay.classList.remove("is-hidden");
+    });
+    window.addEventListener("dragover", function (e) {
+      if (hasFiles(e)) e.preventDefault();
+    });
+    window.addEventListener("dragleave", function (e) {
+      if (!hasFiles(e)) return;
+      dragDepth = Math.max(0, dragDepth - 1);
+      if (dragDepth === 0) dropOverlay.classList.add("is-hidden");
+    });
+    window.addEventListener("drop", function (e) {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth = 0;
+      dropOverlay.classList.add("is-hidden");
+      var files = Array.prototype.filter.call(e.dataTransfer.files, function (f) {
+        return /\.(md|txt)$/i.test(f.name);
+      });
+      if (files.length) handleImportFiles(files);
+      else toast("Drop .md or .txt chat exports", "error");
     });
 
     // Modal

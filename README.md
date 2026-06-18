@@ -81,10 +81,12 @@ node scripts/update_calendar.js --dry-run   # preview without writing/moving
 
 The **"Update from chats"** button runs the **exact same parser**
 (`scripts/lib/parse.js` is shared between Node and the browser). It opens a file
-picker — choose your `.md`/`.txt` exports and they're parsed and merged into the
-in-browser store. Use **Export** to write the merged store back to
+picker — or just **drag-and-drop** your `.md`/`.txt` exports anywhere on the
+window — and they're parsed and merged into the in-browser store. Use **Export →
+Download JSON / Save JSON to file…** to write the merged store back to
 `calendar-events.json` (direct save via the File System Access API where
-supported, otherwise a download) so you can commit it.
+supported, otherwise a download) so you can commit it, or **Export → Calendar
+file (.ics)** to subscribe in your calendar app.
 
 ---
 
@@ -187,12 +189,20 @@ are always preserved.
 
 ## UI
 
-- **Month grid** and **Upcoming agenda** (grouped by week) — toggle between them.
+- **Month grid** and **Upcoming agenda** (grouped by week, with relative-date
+  hints like *“in 5 days”*) — toggle between them.
 - Header: **Add event**, **Update from chats**, **Export**, **Sync file**.
-- Filter **chips** by type (IPO / Earnings / Catalyst / Custom), a **ticker**
-  filter, and a **low-price IPO** toggle.
-- Click any event → a detail panel with notes, source, and signal.
-- **Add-event modal** writes to the store (localStorage + Export to file).
+- Filter **chips** by type (IPO / Earnings / Catalyst / Custom) with live
+  **counts**, a **ticker** filter, and a **low-price IPO** toggle.
+- Click any event → a detail panel with notes, source, signal, and **Edit /
+  Delete** actions.
+- **Add / edit modal** writes to the store (localStorage + Export to file).
+  Editing an event marks it user-curated so the update routine won't overwrite it.
+- **Drag-and-drop** `.md`/`.txt` chat exports anywhere on the window to import
+  them (same parser as the Node routine).
+- **Export** menu: download `calendar-events.json`, save it straight to disk
+  (File System Access API), or export an **iCalendar `.ics`** feed to subscribe
+  in Google / Apple / Outlook Calendar.
 - Responsive (desktop & mobile), green-and-white theme, persistent disclaimer.
 
 ---
@@ -216,7 +226,8 @@ are always preserved.
 │   └── lib/
 │       ├── parse.js               # shared parsing/merge logic (Node + browser)
 │       └── providers.js           # pluggable live-data providers
-└── .claude/skills/calendar/SKILL.md   # "Calendar" trigger registration
+├── .claude/skills/calendar/SKILL.md   # "Calendar" trigger registration
+└── .github/workflows/ci.yml           # CI: runs `node --test` on push / PR
 ```
 
 ---
