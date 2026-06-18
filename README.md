@@ -15,6 +15,9 @@ Events come from two sources:
 
 No backend, no build step. Vanilla HTML/CSS/JS plus a small Node routine.
 
+> 📖 **New here? See [`USAGE.md`](USAGE.md)** for a step-by-step guide to running
+> the app and what every file does.
+
 > **For informational purposes only — not financial advice.** The app never
 > claims a stock "will" move. Events may carry an optional, clearly-labeled
 > `signal` (positive / neutral / caution) derived **only** from concrete inputs —
