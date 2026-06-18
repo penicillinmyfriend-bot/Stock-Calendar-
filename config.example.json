@@ -1,0 +1,22 @@
+{
+  "MIN_IPO_PRICE": 10,
+  "trackedTickers": ["NVDA", "AAPL", "MSFT", "ACME", "GLOBEX"],
+  "disclaimer": "For informational purposes only — not financial advice.",
+  "liveData": {
+    "enabled": false,
+    "ipoHorizonDays": 60,
+    "earningsHorizonDays": 45
+  },
+  "providers": {
+    "finnhub": {
+      "enabled": false,
+      "apiKey": "",
+      "comment": "Free key at https://finnhub.io. Provides IPO calendar + earnings calendar."
+    },
+    "alphaVantage": {
+      "enabled": false,
+      "apiKey": "",
+      "comment": "Free key at https://www.alphavantage.co. Provides earnings calendar + IPO calendar (CSV)."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "stock-calendar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local-first calendar for stock-relevant events (IPOs, earnings, catalysts) sourced from chat exports and optional live market APIs.",
+  "type": "commonjs",
+  "scripts": {
+    "update": "node scripts/update_calendar.js",
+    "test": "node --test",
+    "serve": "node scripts/serve.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

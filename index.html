@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Calendar</title>
+    <meta
+      name="description"
+      content="Local-first calendar for stock-relevant events — IPOs, earnings, and catalysts."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2316a34a'/><path d='M28 64 L44 48 L56 58 L74 36' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>"
+    />
+  </head>
+  <body>
+    <!-- ============================================================ Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand__logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 16 L10 10 L14 13 L20 6"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="20" cy="6" r="1.6" fill="currentColor" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand__title">Stock Calendar</div>
+          <div class="brand__subtitle">IPOs · Earnings · Catalysts</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button
+          id="btn-sync"
+          class="btn btn--ghost btn--icon btn--label-collapsible"
+          title="Reload from data/calendar-events.json"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 12a8 8 0 0 1 13.7-5.7L20 8M20 4v4h-4M20 12a8 8 0 0 1-13.7 5.7L4 16M4 20v-4h4"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Sync file</span>
+        </button>
+
+        <div class="menu-wrap">
+          <button
+            id="btn-export"
+            class="btn btn--ghost btn--label-collapsible"
+            title="Export: JSON or calendar (.ics)"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Export</span>
+          </button>
+          <div class="menu is-hidden" id="export-menu" role="menu">
+            <button role="menuitem" data-act="json">Download JSON</button>
+            <button role="menuitem" data-act="save" id="menu-save">Save JSON to file…</button>
+            <button role="menuitem" data-act="ics">Calendar file (.ics)</button>
+          </div>
+        </div>
+
+        <button id="btn-update" class="btn">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Update from chats
+        </button>
+
+        <button id="btn-add" class="btn btn--primary">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 5v14M5 12h14"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+            />
+          </svg>
+          Add event
+        </button>
+      </div>
+    </header>
+
+    <!-- =========================================================== Toolbar -->
+    <div class="toolbar">
+      <div class="segmented" role="tablist" aria-label="View">
+        <button id="view-month" class="is-active" role="tab">Month</button>
+        <button id="view-upcoming" role="tab">Upcoming</button>
+      </div>
+
+      <div class="month-nav" id="month-nav">
+        <button id="month-prev" aria-label="Previous month">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <span class="month-nav__label" id="month-label">—</span>
+        <button id="month-next" aria-label="Next month">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button id="month-today" class="btn btn--ghost" style="height:32px;padding:0 12px;font-size:13px;">Today</button>
+      </div>
+
+      <div class="toolbar__spacer"></div>
+
+      <div class="chips" id="type-chips" aria-label="Filter by type">
+        <button class="chip is-active" data-type="ipo"><span class="chip__dot"></span>IPO</button>
+        <button class="chip is-active" data-type="earnings"><span class="chip__dot"></span>Earnings</button>
+        <button class="chip is-active" data-type="catalyst"><span class="chip__dot"></span>Catalyst</button>
+        <button class="chip is-active" data-type="custom"><span class="chip__dot"></span>Custom</button>
+      </div>
+
+      <select id="ticker-filter" class="select" aria-label="Filter by ticker">
+        <option value="">All tickers</option>
+      </select>
+
+      <label class="toggle">
+        <input type="checkbox" id="toggle-belowmin" />
+        Show low-price IPOs
+      </label>
+    </div>
+
+    <!-- =========================================================== Content -->
+    <main class="content">
+      <div id="notice" class="notice is-hidden">
+        <span id="notice-text"></span>
+        <button id="notice-dismiss" aria-label="Dismiss">×</button>
+      </div>
+
+      <section id="month-view"></section>
+      <section id="upcoming-view" class="is-hidden"></section>
+    </main>
+
+    <!-- ====================================================== Detail panel -->
+    <aside class="panel" id="detail-panel" aria-hidden="true">
+      <div class="panel__header">
+        <h2 id="panel-title">Event</h2>
+        <button class="panel__close" id="panel-close" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="panel__body" id="panel-body"></div>
+    </aside>
+
+    <!-- ======================================================= Add modal -->
+    <div class="modal-backdrop" id="modal-backdrop">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal__header">
+          <h2 id="modal-title">Add event</h2>
+          <button class="panel__close" id="modal-close" aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <form id="event-form">
+          <div class="modal__body">
+            <div class="field-row">
+              <div class="field">
+                <label for="f-date">Date *</label>
+                <input type="date" id="f-date" required />
+              </div>
+              <div class="field">
+                <label for="f-type">Type *</label>
+                <select id="f-type" required>
+                  <option value="catalyst">Catalyst</option>
+                  <option value="ipo">IPO</option>
+                  <option value="earnings">Earnings</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="f-ticker">Ticker</label>
+                <input type="text" id="f-ticker" placeholder="e.g. ACME" maxlength="6" />
+                <span class="hint">Leave blank for macro / personal events.</span>
+              </div>
+              <div class="field is-hidden" id="field-price">
+                <label for="f-price">Expected price ($)</label>
+                <input type="number" id="f-price" step="0.01" min="0" placeholder="e.g. 18.50" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-title">Title</label>
+              <input type="text" id="f-title" placeholder="Auto-generated if left blank" />
+            </div>
+
+            <div class="field">
+              <label for="f-notes">Notes</label>
+              <textarea id="f-notes" placeholder="Context, sources, what to watch for…"></textarea>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="f-signal">Signal <span class="hint">(optional)</span></label>
+                <select id="f-signal">
+                  <option value="">None</option>
+                  <option value="positive">Positive</option>
+                  <option value="neutral">Neutral</option>
+                  <option value="caution">Caution</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-source">Source</label>
+                <input type="text" id="f-source" value="manual" readonly />
+              </div>
+            </div>
+            <p class="hint">
+              Signal is a clearly-labeled indicator from your own inputs — not a
+              prediction. Leave as “None” unless you have a concrete reason.
+            </p>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="btn" id="modal-cancel">Cancel</button>
+            <button type="submit" class="btn btn--primary" id="modal-submit">Save event</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================== Disclaimer -->
+    <footer class="disclaimer" id="disclaimer">
+      <strong>For informational purposes only — not financial advice.</strong>
+      Signals are clearly-labeled indicators derived from concrete inputs, not
+      predictions. Events are sourced from your chats and optional public APIs.
+    </footer>
+
+    <div class="toast-container" id="toasts"></div>
+
+    <!-- Drag-and-drop import overlay -->
+    <div class="drop-overlay is-hidden" id="drop-overlay">
+      <div class="drop-overlay__card">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <div>Drop chat exports (<strong>.md</strong> / <strong>.txt</strong>) to import</div>
+      </div>
+    </div>
+
+    <!-- Hidden file input used by "Update from chats" in the browser -->
+    <input type="file" id="import-input" accept=".md,.txt,text/markdown,text/plain" multiple class="is-hidden" />
+
+    <!-- Shared parsing logic (UMD) then the app. Classic scripts so the app
+         also opens directly from file:// without a module/CORS error. -->
+    <script src="scripts/lib/parse.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
