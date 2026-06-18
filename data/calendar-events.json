@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-18T20:29:51.469Z",
+  "updatedAt": "2026-06-18T21:28:53.775Z",
   "events": [
     {
       "id": "portfolio-review-2026-06-30",
@@ -46,6 +46,16 @@
       "id": "micro-ipo-2026-07-09"
     },
     {
+      "date": "2026-07-14",
+      "ticker": "JPM",
+      "type": "earnings",
+      "title": "JPM Q2 Earnings",
+      "notes": "Big banks kick off the earnings season.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "jpm-earnings-2026-07-14"
+    },
+    {
       "date": "2026-07-15",
       "ticker": "ACME",
       "type": "ipo",
@@ -65,6 +75,16 @@
       "notes": "June CPI print. Macro catalyst that can move rate-sensitive names.",
       "source": "manual",
       "sourceRef": "seed"
+    },
+    {
+      "date": "2026-07-16",
+      "ticker": "NFLX",
+      "type": "earnings",
+      "title": "NFLX Q2 Earnings",
+      "notes": "Subscriber growth and the ad tier in focus.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "nflx-earnings-2026-07-16"
     },
     {
       "id": "pennyco-ipo-2026-07-22",
@@ -88,6 +108,36 @@
       "id": "tsla-earnings-2026-07-23"
     },
     {
+      "date": "2026-07-28",
+      "ticker": "AMD",
+      "type": "earnings",
+      "title": "AMD Q2 Earnings",
+      "notes": "Data-center GPU ramp watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "amd-earnings-2026-07-28"
+    },
+    {
+      "date": "2026-07-28",
+      "ticker": "GOOGL",
+      "type": "earnings",
+      "title": "GOOGL Q2 Earnings",
+      "notes": "Search and Cloud growth watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "googl-earnings-2026-07-28"
+    },
+    {
+      "date": "2026-07-28",
+      "ticker": "MSFT",
+      "type": "earnings",
+      "title": "MSFT Q4 FY26 Earnings",
+      "notes": "Azure cloud growth in focus.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "msft-earnings-2026-07-28"
+    },
+    {
       "id": "fomc-rate-decision-2026-07-29",
       "date": "2026-07-29",
       "ticker": null,
@@ -97,6 +147,26 @@
       "source": "manual",
       "sourceRef": "seed",
       "signal": "neutral"
+    },
+    {
+      "date": "2026-07-29",
+      "ticker": "META",
+      "type": "earnings",
+      "title": "META Q2 Earnings",
+      "notes": "Ad revenue and AI capex in focus.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "meta-earnings-2026-07-29"
+    },
+    {
+      "date": "2026-07-30",
+      "ticker": "AMZN",
+      "type": "earnings",
+      "title": "AMZN Q2 Earnings",
+      "notes": "AWS margins and retail in focus.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "amzn-earnings-2026-07-30"
     },
     {
       "id": "aapl-earnings-2026-07-31",
@@ -119,6 +189,47 @@
       "id": "biib-catalyst-2026-08-05"
     },
     {
+      "date": "2026-08-07",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "Jobs Report (Payrolls)",
+      "notes": "July nonfarm payrolls. Broad market catalyst.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "mkt-catalyst-2026-08-07-1o5bl6"
+    },
+    {
+      "date": "2026-08-12",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "CPI Inflation Report",
+      "notes": "July CPI print. Rate-sensitive catalyst.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "mkt-catalyst-2026-08-12-1ega1w"
+    },
+    {
+      "date": "2026-08-12",
+      "ticker": "NOVA",
+      "type": "ipo",
+      "title": "Nova Robotics IPO",
+      "expectedPrice": 19,
+      "notes": "Warehouse-automation robotics IPO.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
+      "id": "nova-ipo-2026-08-12"
+    },
+    {
+      "date": "2026-08-19",
+      "ticker": "MSFT",
+      "type": "catalyst",
+      "title": "MSFT Ex-Dividend Date",
+      "notes": "Ex-dividend date for the quarterly payout.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "msft-catalyst-2026-08-19"
+    },
+    {
       "id": "nvda-earnings-2026-08-27",
       "date": "2026-08-27",
       "ticker": "NVDA",
@@ -130,6 +241,36 @@
       "signal": "positive"
     },
     {
+      "date": "2026-09-04",
+      "ticker": "AVGO",
+      "type": "earnings",
+      "title": "AVGO Q3 Earnings",
+      "notes": "AI networking demand watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "avgo-earnings-2026-09-04"
+    },
+    {
+      "date": "2026-09-04",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "Jobs Report (Payrolls)",
+      "notes": "August nonfarm payrolls.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "mkt-catalyst-2026-09-04-1o5bl6"
+    },
+    {
+      "date": "2026-09-09",
+      "ticker": "AAPL",
+      "type": "catalyst",
+      "title": "AAPL Product Event",
+      "notes": "Expected fall hardware launch (iPhone). Company catalyst.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "aapl-catalyst-2026-09-09"
+    },
+    {
       "id": "msft-analyst-day-2026-09-10",
       "date": "2026-09-10",
       "ticker": "MSFT",
@@ -138,6 +279,216 @@
       "notes": "Investor/analyst day — updated segment guidance possible.",
       "source": "manual",
       "sourceRef": "seed"
+    },
+    {
+      "date": "2026-09-11",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "CPI Inflation Report",
+      "notes": "August CPI print.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "mkt-catalyst-2026-09-11-1ega1w"
+    },
+    {
+      "date": "2026-09-16",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "FOMC Rate Decision",
+      "notes": "Fed rate decision and press conference.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "signal": "neutral",
+      "id": "mkt-catalyst-2026-09-16-47ew6i"
+    },
+    {
+      "date": "2026-09-24",
+      "ticker": "COST",
+      "type": "earnings",
+      "title": "COST Q4 Earnings",
+      "notes": "Membership and traffic trends watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "cost-earnings-2026-09-24"
+    },
+    {
+      "date": "2026-09-30",
+      "ticker": "VOLT",
+      "type": "ipo",
+      "title": "Voltaic Energy IPO",
+      "expectedPrice": 15,
+      "notes": "Grid-scale battery storage IPO.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
+      "id": "volt-ipo-2026-09-30"
+    },
+    {
+      "date": "2026-10-02",
+      "ticker": "TSLA",
+      "type": "catalyst",
+      "title": "TSLA Q3 Deliveries",
+      "notes": "Quarterly delivery and production numbers.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "tsla-catalyst-2026-10-02"
+    },
+    {
+      "date": "2026-10-06",
+      "ticker": "GLOBEX",
+      "type": "catalyst",
+      "title": "GLOBEX Lock-up Expiration",
+      "notes": "~90 days post-IPO; insider lock-up expiry can add share supply (signal: caution, not a prediction).",
+      "source": "manual",
+      "sourceRef": "seed",
+      "signal": "caution",
+      "id": "globex-catalyst-2026-10-06"
+    },
+    {
+      "date": "2026-10-07",
+      "ticker": "HELIX",
+      "type": "ipo",
+      "title": "Helix Bio IPO",
+      "expectedPrice": 24,
+      "notes": "Gene-therapy platform IPO.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
+      "id": "helix-ipo-2026-10-07"
+    },
+    {
+      "date": "2026-10-15",
+      "ticker": "TINY",
+      "type": "ipo",
+      "title": "TinyCo IPO",
+      "expectedPrice": 7,
+      "notes": "Small-cap IPO below the $10 default threshold — hidden by default.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
+      "id": "tiny-ipo-2026-10-15"
+    },
+    {
+      "date": "2026-10-20",
+      "ticker": "NFLX",
+      "type": "earnings",
+      "title": "NFLX Q3 Earnings",
+      "notes": "Engagement and ad-tier monetization watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "nflx-earnings-2026-10-20"
+    },
+    {
+      "date": "2026-10-21",
+      "ticker": "TSLA",
+      "type": "earnings",
+      "title": "TSLA Q3 Earnings",
+      "notes": "Margins and energy storage in focus.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "tsla-earnings-2026-10-21"
+    },
+    {
+      "date": "2026-10-27",
+      "ticker": "GOOGL",
+      "type": "earnings",
+      "title": "GOOGL Q3 Earnings",
+      "notes": "Cloud profitability watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "googl-earnings-2026-10-27"
+    },
+    {
+      "date": "2026-10-27",
+      "ticker": "MSFT",
+      "type": "earnings",
+      "title": "MSFT Q1 FY27 Earnings",
+      "notes": "Azure and AI Copilot adoption watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "msft-earnings-2026-10-27"
+    },
+    {
+      "date": "2026-10-28",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "FOMC Rate Decision",
+      "notes": "Fed rate decision and press conference.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "signal": "neutral",
+      "id": "mkt-catalyst-2026-10-28-47ew6i"
+    },
+    {
+      "date": "2026-10-28",
+      "ticker": "META",
+      "type": "earnings",
+      "title": "META Q3 Earnings",
+      "notes": "Reality Labs spend and ad growth watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "meta-earnings-2026-10-28"
+    },
+    {
+      "date": "2026-10-29",
+      "ticker": "AAPL",
+      "type": "earnings",
+      "title": "AAPL Q4 Earnings",
+      "notes": "Holiday-quarter guidance in focus.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "aapl-earnings-2026-10-29"
+    },
+    {
+      "date": "2026-10-29",
+      "ticker": "AMZN",
+      "type": "earnings",
+      "title": "AMZN Q3 Earnings",
+      "notes": "AWS reacceleration watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "amzn-earnings-2026-10-29"
+    },
+    {
+      "date": "2026-11-04",
+      "ticker": "AURA",
+      "type": "ipo",
+      "title": "Aura AI IPO",
+      "expectedPrice": 28,
+      "notes": "Enterprise AI infrastructure IPO. High-profile debut; valuation widely watched (signal: neutral, not a prediction).",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
+      "signal": "neutral",
+      "id": "aura-ipo-2026-11-04"
+    },
+    {
+      "date": "2026-11-18",
+      "ticker": "NVDA",
+      "type": "earnings",
+      "title": "NVDA Q3 Earnings",
+      "notes": "Data-center demand and supply commentary watched.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "id": "nvda-earnings-2026-11-18"
+    },
+    {
+      "date": "2026-12-02",
+      "ticker": "ORBIT",
+      "type": "ipo",
+      "title": "Orbit Space IPO",
+      "expectedPrice": 21,
+      "notes": "Satellite-connectivity IPO.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
+      "id": "orbit-ipo-2026-12-02"
+    },
+    {
+      "date": "2026-12-09",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "FOMC Rate Decision",
+      "notes": "Fed rate decision and press conference.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "signal": "neutral",
+      "id": "mkt-catalyst-2026-12-09-47ew6i"
     }
   ]
 }
