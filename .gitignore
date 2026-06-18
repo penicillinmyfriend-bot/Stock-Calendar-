@@ -1,0 +1,17 @@
+# Local configuration & secrets (API keys, tracked tickers, thresholds)
+config.local.json
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Processed chat imports are kept out of git by default.
+# Comment the next line out if you'd rather version your processed exports.
+import/processed/

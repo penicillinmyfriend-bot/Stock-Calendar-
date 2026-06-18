@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-15T00:00:00.000Z",
+  "events": [
+    {
+      "id": "fomc-rate-decision-2026-07-29",
+      "date": "2026-07-29",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "FOMC Rate Decision",
+      "notes": "Federal Reserve interest-rate decision and press conference. Broad market catalyst.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "signal": "neutral"
+    },
+    {
+      "id": "cpi-release-2026-07-15",
+      "date": "2026-07-15",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "CPI Inflation Report",
+      "notes": "June CPI print. Macro catalyst that can move rate-sensitive names.",
+      "source": "manual",
+      "sourceRef": "seed"
+    },
+    {
+      "id": "nvda-earnings-2026-08-27",
+      "date": "2026-08-27",
+      "ticker": "NVDA",
+      "type": "earnings",
+      "title": "NVDA Q2 Earnings",
+      "notes": "Quarterly results after market close. Watching data-center guidance.",
+      "source": "manual",
+      "sourceRef": "seed",
+      "signal": "positive"
+    },
+    {
+      "id": "aapl-earnings-2026-07-31",
+      "date": "2026-07-31",
+      "ticker": "AAPL",
+      "type": "earnings",
+      "title": "AAPL Q3 Earnings",
+      "notes": "Quarterly results. Services growth and iPhone demand in focus.",
+      "source": "manual",
+      "sourceRef": "seed"
+    },
+    {
+      "id": "globex-ipo-2026-07-08",
+      "date": "2026-07-08",
+      "ticker": "GLOBEX",
+      "type": "ipo",
+      "title": "Globex Inc IPO",
+      "expectedPrice": 22.0,
+      "notes": "Industrial-automation IPO. Expected pricing in the $20-24 range.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
+      "signal": "neutral"
+    },
+    {
+      "id": "pennyco-ipo-2026-07-22",
+      "date": "2026-07-22",
+      "ticker": "PENNY",
+      "type": "ipo",
+      "title": "PennyCo IPO",
+      "expectedPrice": 4.0,
+      "notes": "Below MIN_IPO_PRICE (default $10) — hidden by default. Toggle the IPO price filter to reveal.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos"
+    },
+    {
+      "id": "msft-analyst-day-2026-09-10",
+      "date": "2026-09-10",
+      "ticker": "MSFT",
+      "type": "catalyst",
+      "title": "MSFT Analyst Day",
+      "notes": "Investor/analyst day — updated segment guidance possible.",
+      "source": "manual",
+      "sourceRef": "seed"
+    },
+    {
+      "id": "portfolio-review-2026-06-30",
+      "date": "2026-06-30",
+      "ticker": null,
+      "type": "custom",
+      "title": "Monthly portfolio review",
+      "notes": "Personal reminder to rebalance and review the watchlist.",
+      "source": "manual",
+      "sourceRef": "seed"
+    }
+  ]
+}
