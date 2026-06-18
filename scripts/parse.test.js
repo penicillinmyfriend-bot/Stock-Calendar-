@@ -53,6 +53,40 @@ test("signal is only attached from explicit cues, never guessed", () => {
   assert.equal(plain[0].signal, undefined, "no signal without a concrete cue");
 });
 
+test("reflow joins soft-wrapped lines, strips speaker prefixes, keeps sentences separate", () => {
+  const text = [
+    "Assistant: A few names worth tracking:",
+    "",
+    "- $ACME is going public on 2026-07-15. Expected price around $18.50 — cloud-infra",
+    "  exposure, lock-up expires 90 days post-IPO. Worth watching.",
+    "Assistant: $MICRO IPO is expected 2026-07-09 at about $6 — note that's below your",
+    "$10 IPO threshold, so it should be filtered out by default.",
+  ].join("\n");
+  const events = parse.extractEvents(text, { sourceRef: "import/x.md", referenceDate: REF });
+
+  const acme = events.find((e) => e.ticker === "ACME");
+  assert.ok(acme, "ACME event extracted");
+  assert.equal(acme.expectedPrice, 18.5);
+  assert.ok(acme.notes.includes("lock-up expires"), "soft-wrapped continuation merged into notes");
+  assert.ok(!/^Assistant:/i.test(acme.notes), "speaker prefix stripped");
+
+  const micro = events.find((e) => e.ticker === "MICRO");
+  assert.ok(micro, "MICRO event extracted");
+  assert.equal(micro.expectedPrice, 6);
+  assert.ok(micro.notes.includes("filtered out by default"), "note is not clipped at the wrap");
+  assert.ok(!/Assistant:/i.test(micro.notes), "speaker prefix stripped");
+});
+
+test("one-sentence-per-line text stays as separate events (no over-merge)", () => {
+  const text = [
+    "$TSLA reports earnings on 2026-07-23.",
+    "The next jobs report (nonfarm payrolls) lands 7/2/2026.",
+    "$BIIB has a PDUFA / FDA decision date on August 5, 2026.",
+  ].join("\n");
+  const events = parse.extractEvents(text, { referenceDate: REF });
+  assert.equal(events.length, 3, "three distinct events, not one merged line");
+});
+
 test("applyIpoPriceFilter hides IPOs below the threshold but keeps others", () => {
   const events = [
     { type: "ipo", expectedPrice: 4, id: "a" },

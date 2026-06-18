@@ -222,22 +222,59 @@
     return str.length > n ? str.slice(0, n - 1).trimEnd() + "…" : str;
   }
 
-  // Split text into "lines" — one event maps to one line/bullet. We split on
-  // newlines only (not sentences) so an IPO and its price stated in adjacent
-  // sentences of the same bullet stay together. Leading markdown markers
-  // (headers, blockquotes, list bullets) are stripped without touching a
-  // line that *starts* with a date.
+  // Strip leading markdown markers (headers, blockquotes, list bullets) and chat
+  // speaker prefixes ("Me:", "Assistant:", …) from a raw physical line.
+  function stripMarkers(raw) {
+    return raw
+      .replace(/^\s*#{1,6}\s+/, "") // markdown headers
+      .replace(/^\s*>+\s?/, "") // blockquotes
+      .replace(/^\s*(?:[-*•]|\d+[.)])\s+/, "") // list markers: "- ", "1. ", "2) "
+      .replace(/^\s*(?:me|you|user|human|assistant|ai|bot|chatgpt|claude|gpt)\s*:\s*/i, "") // speaker turns
+      .trim();
+  }
+
+  // True if `raw` begins a new logical block (heading, list item, blockquote,
+  // or chat speaker turn) rather than continuing the previous line.
+  function startsBlock(raw) {
+    return (
+      /^\s*#{1,6}\s+/.test(raw) ||
+      /^\s*(?:[-*•]|\d+[.)])\s+/.test(raw) ||
+      /^\s*>+\s?/.test(raw) ||
+      /^\s*(?:me|you|user|human|assistant|ai|bot|chatgpt|claude|gpt)\s*:/i.test(raw)
+    );
+  }
+
+  // True if a line already ends a sentence (so the next line is NOT a soft-wrap
+  // continuation of it).
+  function endsSentence(s) {
+    return /[.!?:]["'’)\]]?\s*$/.test(s);
+  }
+
+  // Split text into logical lines — one event maps to one line/bullet/sentence.
+  // Soft-wrapped markdown (a bullet whose text continues on an indented next
+  // line) is re-joined so notes/prices aren't clipped, but genuine
+  // one-sentence-per-line text stays separate (guarded by endsSentence) so we
+  // don't over-merge distinct events.
   function toLines(text) {
-    return String(text || "")
-      .split(/\r?\n/)
-      .map((l) =>
-        l
-          .replace(/^\s*#{1,6}\s+/, "") // markdown headers
-          .replace(/^\s*>+\s?/, "") // blockquotes
-          .replace(/^\s*(?:[-*•]|\d+[.)])\s+/, "") // list markers: "- ", "1. ", "2) "
-          .trim()
-      )
-      .filter(Boolean);
+    var physical = String(text || "").split(/\r?\n/);
+    var out = [];
+    var current = null;
+    for (var i = 0; i < physical.length; i++) {
+      var raw = physical[i];
+      if (/^\s*$/.test(raw)) {
+        if (current) out.push(current);
+        current = null;
+        continue;
+      }
+      if (current === null || startsBlock(raw) || endsSentence(current)) {
+        if (current) out.push(current);
+        current = stripMarkers(raw);
+      } else {
+        current += " " + raw.trim(); // soft-wrap continuation
+      }
+    }
+    if (current) out.push(current);
+    return out.filter(Boolean);
   }
 
   /**

@@ -1,7 +1,92 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-15T00:00:00.000Z",
+  "updatedAt": "2026-06-18T20:29:51.469Z",
   "events": [
+    {
+      "id": "portfolio-review-2026-06-30",
+      "date": "2026-06-30",
+      "ticker": null,
+      "type": "custom",
+      "title": "Monthly portfolio review",
+      "notes": "Personal reminder to rebalance and review the watchlist.",
+      "source": "manual",
+      "sourceRef": "seed"
+    },
+    {
+      "date": "2026-07-02",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "Jobs Report (Payrolls)",
+      "notes": "The next jobs report (nonfarm payrolls) lands 7/2/2026 — macro catalyst.",
+      "source": "chat",
+      "sourceRef": "import/2026-06-10-chat.md",
+      "id": "mkt-catalyst-2026-07-02-1o5bl6"
+    },
+    {
+      "id": "globex-ipo-2026-07-08",
+      "date": "2026-07-08",
+      "ticker": "GLOBEX",
+      "type": "ipo",
+      "title": "Globex Inc IPO",
+      "expectedPrice": 22,
+      "notes": "Industrial-automation IPO. Expected pricing in the $20-24 range.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
+      "signal": "neutral"
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "MICRO",
+      "type": "ipo",
+      "title": "MICRO IPO",
+      "notes": "$MICRO IPO is expected 2026-07-09 at about $6 — note that's below your $10 IPO threshold, so it should be filtered out by default.",
+      "source": "chat",
+      "sourceRef": "import/2026-06-10-chat.md",
+      "expectedPrice": 6,
+      "id": "micro-ipo-2026-07-09"
+    },
+    {
+      "date": "2026-07-15",
+      "ticker": "ACME",
+      "type": "ipo",
+      "title": "ACME IPO",
+      "notes": "$ACME is going public on 2026-07-15. Expected price around $18.50 — cloud-infra exposure, lock-up expires 90 days post-IPO. Worth watching.",
+      "source": "chat",
+      "sourceRef": "import/2026-06-10-chat.md",
+      "expectedPrice": 18.5,
+      "id": "acme-ipo-2026-07-15"
+    },
+    {
+      "id": "cpi-release-2026-07-15",
+      "date": "2026-07-15",
+      "ticker": null,
+      "type": "catalyst",
+      "title": "CPI Inflation Report",
+      "notes": "June CPI print. Macro catalyst that can move rate-sensitive names.",
+      "source": "manual",
+      "sourceRef": "seed"
+    },
+    {
+      "id": "pennyco-ipo-2026-07-22",
+      "date": "2026-07-22",
+      "ticker": "PENNY",
+      "type": "ipo",
+      "title": "PennyCo IPO",
+      "expectedPrice": 4,
+      "notes": "Below MIN_IPO_PRICE (default $10) — hidden by default. Toggle the IPO price filter to reveal.",
+      "source": "api",
+      "sourceRef": "https://www.nasdaq.com/market-activity/ipos"
+    },
+    {
+      "date": "2026-07-23",
+      "ticker": "TSLA",
+      "type": "earnings",
+      "title": "TSLA Earnings",
+      "notes": "Heads up: $TSLA reports earnings on 2026-07-23 (after the close).",
+      "source": "chat",
+      "sourceRef": "import/2026-06-10-chat.md",
+      "id": "tsla-earnings-2026-07-23"
+    },
     {
       "id": "fomc-rate-decision-2026-07-29",
       "date": "2026-07-29",
@@ -14,14 +99,24 @@
       "signal": "neutral"
     },
     {
-      "id": "cpi-release-2026-07-15",
-      "date": "2026-07-15",
-      "ticker": null,
-      "type": "catalyst",
-      "title": "CPI Inflation Report",
-      "notes": "June CPI print. Macro catalyst that can move rate-sensitive names.",
+      "id": "aapl-earnings-2026-07-31",
+      "date": "2026-07-31",
+      "ticker": "AAPL",
+      "type": "earnings",
+      "title": "AAPL Q3 Earnings",
+      "notes": "Quarterly results. Services growth and iPhone demand in focus.",
       "source": "manual",
       "sourceRef": "seed"
+    },
+    {
+      "date": "2026-08-05",
+      "ticker": "BIIB",
+      "type": "catalyst",
+      "title": "BIIB FDA / PDUFA Decision",
+      "notes": "Yes — $BIIB has a PDUFA / FDA decision date on August 5, 2026. Binary catalyst.",
+      "source": "chat",
+      "sourceRef": "import/2026-06-10-chat.md",
+      "id": "biib-catalyst-2026-08-05"
     },
     {
       "id": "nvda-earnings-2026-08-27",
@@ -35,55 +130,12 @@
       "signal": "positive"
     },
     {
-      "id": "aapl-earnings-2026-07-31",
-      "date": "2026-07-31",
-      "ticker": "AAPL",
-      "type": "earnings",
-      "title": "AAPL Q3 Earnings",
-      "notes": "Quarterly results. Services growth and iPhone demand in focus.",
-      "source": "manual",
-      "sourceRef": "seed"
-    },
-    {
-      "id": "globex-ipo-2026-07-08",
-      "date": "2026-07-08",
-      "ticker": "GLOBEX",
-      "type": "ipo",
-      "title": "Globex Inc IPO",
-      "expectedPrice": 22.0,
-      "notes": "Industrial-automation IPO. Expected pricing in the $20-24 range.",
-      "source": "api",
-      "sourceRef": "https://www.nasdaq.com/market-activity/ipos",
-      "signal": "neutral"
-    },
-    {
-      "id": "pennyco-ipo-2026-07-22",
-      "date": "2026-07-22",
-      "ticker": "PENNY",
-      "type": "ipo",
-      "title": "PennyCo IPO",
-      "expectedPrice": 4.0,
-      "notes": "Below MIN_IPO_PRICE (default $10) — hidden by default. Toggle the IPO price filter to reveal.",
-      "source": "api",
-      "sourceRef": "https://www.nasdaq.com/market-activity/ipos"
-    },
-    {
       "id": "msft-analyst-day-2026-09-10",
       "date": "2026-09-10",
       "ticker": "MSFT",
       "type": "catalyst",
       "title": "MSFT Analyst Day",
       "notes": "Investor/analyst day — updated segment guidance possible.",
-      "source": "manual",
-      "sourceRef": "seed"
-    },
-    {
-      "id": "portfolio-review-2026-06-30",
-      "date": "2026-06-30",
-      "ticker": null,
-      "type": "custom",
-      "title": "Monthly portfolio review",
-      "notes": "Personal reminder to rebalance and review the watchlist.",
       "source": "manual",
       "sourceRef": "seed"
     }
