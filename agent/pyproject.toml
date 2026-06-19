@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "self-improving-agent"
+version = "0.1.0"
+description = "A local, self-improving AI agent. All inference runs locally via Ollama; no cloud calls."
+readme = "README.md"
+requires-python = ">=3.10"
+# No REQUIRED third-party dependencies: the agent talks to Ollama over the
+# stdlib (urllib) and uses PyYAML only if present (with a built-in fallback).
+dependencies = []
+
+[project.optional-dependencies]
+# Optional, project-local only. Install into ./.venv if you want them:
+#   python -m venv .venv && . .venv/bin/activate && pip install -e ".[yaml,dev]"
+yaml = ["PyYAML>=5.1"]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+agent = "agentcore.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["agentcore*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

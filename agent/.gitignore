@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Project-local virtual environment (the ONLY place the agent may install)
+.venv/
+
+# Runtime state the agent produces (kept out of version control AND protected
+# from `git clean` during a revert, since git never cleans ignored files).
+.agent/
+*.log

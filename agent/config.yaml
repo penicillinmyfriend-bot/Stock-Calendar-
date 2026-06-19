@@ -1,0 +1,81 @@
+# =============================================================================
+# Self-improving agent configuration
+# Edit this file to control the agent. The running agent may also tune this
+# file as part of self-improvement, but only within the test-then-commit loop.
+# =============================================================================
+
+# --- Local model (Ollama) -----------------------------------------------------
+# ALL inference is local. The agent makes no cloud LLM calls.
+model:
+  name: qwen2.5-coder        # default Ollama model; pull it with: ollama pull qwen2.5-coder
+  host: http://127.0.0.1:11434  # local Ollama server
+  temperature: 0.2
+  # Per-request timeout in seconds for a single model call.
+  request_timeout: 120
+
+# --- Session budget -----------------------------------------------------------
+# The default when neither --minutes nor --iterations is given on the CLI.
+# The agent CANNOT extend its own budget; it is enforced by the harness.
+session:
+  default_minutes: 10          # wall-clock budget per run
+  default_iterations: 25       # iteration budget per run
+  # When both a time and iteration budget are active, whichever is hit first
+  # stops the run (hard stop).
+
+# --- Sandbox / project paths --------------------------------------------------
+paths:
+  # The directory the agent is allowed to read and write. Everything outside it
+  # is off-limits. Resolved relative to THIS config file's directory.
+  # ".." => the repository root (so the agent can also work on the Stock
+  # Calendar app). Set to "." to confine the agent to the agent/ folder only.
+  project_root: ".."
+  # Where per-run state (last-good commit marker, run metadata) is stored.
+  # Always kept inside project_root.
+  state_dir: "agent/.agent"
+
+# --- Web access ---------------------------------------------------------------
+# OFF by default. The running agent has NO network egress except this tool,
+# and only when enabled here.
+web:
+  enabled: false
+  # Allowlist of hosts the web tool may contact when enabled. Empty => any host.
+  allowed_hosts: []
+  fetch_timeout: 20
+  max_bytes: 1000000           # cap on bytes fetched per request
+
+# --- Command sandbox ----------------------------------------------------------
+commands:
+  # Only the first token (the program) of a command is checked against these.
+  # If allowlist is non-empty, ONLY these programs may run. Leave empty to allow
+  # any program that is not blocked by the denylist below.
+  allowlist:
+    - python
+    - python3
+    - pytest
+    - pip
+    - git
+    - ls
+    - cat
+    - echo
+    - node
+    - npm
+  # Hard denylist: substrings/patterns that are always refused, regardless of
+  # the allowlist. These are safety backstops (see agentcore/safety.py for the
+  # full, code-enforced rules).
+  denylist:
+    - "rm -rf /"
+    - "rm -rf ~"
+    - ":(){"            # fork bomb
+    - "mkfs"
+    - "dd if="
+    - "shutdown"
+    - "reboot"
+    - "sudo"
+  # Per-command timeout in seconds.
+  timeout: 120
+
+# --- Tests --------------------------------------------------------------------
+# How the agent runs the test suite to decide commit-vs-revert.
+tests:
+  # Command executed from project_root. Must exit 0 for a change to be kept.
+  command: "python -m unittest discover -s agent/tests -t agent"
